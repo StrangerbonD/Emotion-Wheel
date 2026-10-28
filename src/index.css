@@ -1,0 +1,333 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --ink: #3a3a3a;
+  --bg: #fdfcef;
+  --accent: #9b8cff;
+}
+
+* {
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  font-family: 'Lato', 'Hind Siliguri', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+    Helvetica, Arial, sans-serif;
+  background: var(--bg);
+  color: var(--ink);
+  overflow: hidden;
+}
+
+body.dark {
+  --ink: #e0e0e0;
+  --bg: #171717;
+  --accent: #b0a4ff;
+  background: var(--bg);
+  color: var(--ink);
+}
+
+.seo-only {
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.wheel-wrapper {
+  width: min(88vmin, 760px);
+  height: min(88vmin, 760px);
+}
+
+.seg {
+  cursor: pointer;
+  transition: fill-opacity 0.3s ease;
+}
+
+.seg path {
+  stroke: #ffffff;
+  stroke-width: 1.4;
+  transition: stroke-width 0.15s ease;
+}
+
+.seg text {
+  fill: var(--ink);
+  pointer-events: none;
+  user-select: none;
+  font-weight: 400;
+}
+
+.seg.core text {
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+/* Dim the FILL only, never the strokes — so the breadcrumb border stays crisp */
+.rotor.has-selection .seg {
+  fill-opacity: 0.13;
+}
+.rotor.has-selection .seg.active {
+  fill-opacity: 0.5;
+}
+.rotor.has-selection .seg.lead {
+  fill-opacity: 1;
+}
+
+.hub {
+  cursor: grab;
+}
+
+.hub:active {
+  cursor: grabbing;
+}
+
+.hub-circle {
+  fill: #ffffff;
+  stroke: #e7e7e7;
+  stroke-width: 1.5;
+  cursor: grab;
+  transition: stroke 0.15s ease, filter 0.15s ease;
+}
+
+.hub:hover .hub-circle {
+  stroke: #c8c8c8;
+  filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.08));
+}
+
+.hub:active .hub-circle {
+  cursor: grabbing;
+}
+
+.hub-text {
+  fill: #000000;
+  font-weight: 700;
+  text-anchor: middle;
+  pointer-events: none;
+  user-select: none;
+  letter-spacing: 0.024em;
+  text-transform: uppercase;
+}
+
+.btn {
+  border: 1px solid #e6e6e6;
+  cursor: pointer;
+  font-family: inherit;
+  background: #ffffff;
+  color: #555555;
+  border-radius: 999px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
+  transition: transform 0.14s ease;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+}
+
+.btn:active {
+  transform: scale(0.95);
+}
+
+.simplify-btn .sw {
+  position: relative;
+  width: 38px;
+  height: 22px;
+  border-radius: 999px;
+  background: #dcdcdc;
+  transition: background 0.2s;
+  flex: none;
+}
+
+.simplify-btn .sw::after {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #ffffff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+  transition: left 0.2s;
+}
+
+.simplify-btn.on .sw {
+  background: #7bc47f;
+}
+
+.simplify-btn.on .sw::after {
+  left: 18px;
+}
+
+/* Keyboard focus ring */
+.seg.kb-focus path {
+  stroke: #222222 !important;
+  stroke-width: 3.5 !important;
+  stroke-dasharray: 7 4;
+}
+
+/* Geneva spoke styling */
+.spoke-line {
+  stroke: #dddddd;
+  stroke-width: 1;
+  pointer-events: none;
+}
+
+.spoke-dot {
+  cursor: pointer;
+  pointer-events: all;
+  transition: transform 0.15s ease, opacity 0.15s;
+  transform-origin: center;
+  transform-box: fill-box;
+}
+
+.spoke-dot:hover {
+  animation: throb 0.6s ease-in-out infinite;
+}
+
+@keyframes throb {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.25);
+  }
+}
+
+.spoke-dot.dim {
+  opacity: 0.2;
+}
+
+.spoke-dot.selected {
+  stroke: #ffffff;
+  stroke-width: 2.5;
+}
+
+.axis-label {
+  font-size: 11px;
+  font-weight: 300;
+  fill: #aaaaaa;
+  pointer-events: none;
+  text-anchor: middle;
+}
+
+.dyad-label {
+  font-size: 8.5px;
+  font-weight: 400;
+  fill: #aaaaaa;
+  pointer-events: none;
+  user-select: none;
+}
+
+/* Dark mode overrides */
+body.dark .seg text {
+  fill: #f0f0f0 !important;
+}
+body.dark .seg.core text {
+  fill: #ffffff !important;
+}
+body.dark .seg path {
+  stroke: #0d0d0d !important;
+  stroke-width: 1.4;
+}
+body.dark .seg.kb-focus path {
+  stroke: #ffffff !important;
+}
+body.dark .hub-circle {
+  fill: #242424;
+  stroke: #3a3a3a;
+}
+body.dark .hub-text {
+  fill: #e0e0e0;
+}
+body.dark .btn {
+  background: #242424;
+  border-color: #3a3a3a;
+  color: #cccccc;
+}
+body.dark .simplify-btn .sw {
+  background: #555555;
+}
+body.dark .simplify-btn.on .sw {
+  background: #5aa55e;
+}
+body.dark .spoke-line {
+  stroke: #444444;
+}
+body.dark .axis-label {
+  fill: #777777;
+}
+body.dark .dyad-label {
+  fill: #888888;
+}
+
+@media (max-width: 760px) {
+  .wheel-wrapper {
+    width: 172vw;
+    height: 172vw;
+    margin-left: -86vw;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .seg,
+  .seg path {
+    transition: none !important;
+  }
+  .define-card {
+    animation: none !important;
+  }
+  .simplify-btn .sw,
+  .simplify-btn .sw::after {
+    transition: none !important;
+  }
+  .btn {
+    transition: none !important;
+  }
+}
+
+@media print {
+  body {
+    overflow: visible;
+    background: #ffffff;
+  }
+  .topright,
+  .simplify-btn,
+  .hint,
+  .define-btn,
+  .overlay,
+  .speak-btn,
+  .close-def-btn,
+  .intensity {
+    display: none !important;
+  }
+  .wheel-wrapper {
+    width: 100vmin;
+    height: 100vmin;
+  }
+  .stage {
+    height: auto;
+  }
+  .define-wrap {
+    position: static;
+    display: block !important;
+  }
+  .define-card {
+    display: block !important;
+    box-shadow: none;
+    border: 1px solid #cccccc;
+  }
+}
