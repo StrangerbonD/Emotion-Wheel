@@ -1,5 +1,5 @@
-import { CORES } from '../data/emotionsData';
-import { dispWord, fillColor } from './emotionHelpers';
+import { CORES } from '../data/emotionsData.js';
+import { dispWord, fillColor } from './emotionHelpers.js';
 
 export const CX = 400;
 export const CY = 400;

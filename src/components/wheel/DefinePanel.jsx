@@ -5,25 +5,27 @@ import {
   dispBangla,
   fillColor,
   keyColor,
-} from '../utils/emotionHelpers';
+} from '../../utils/emotionHelpers.js';
+import { speakEnglishText } from '../../utils/speech.js';
+import { getActionsForSelection } from '../../data/actionsData.js';
 
 export default function DefinePanel({
   selectedWord,
   secondaryParentWord,
+  branchSecondaryWord,
   coreEmotion,
   open,
   onClose,
+  onOpenActions,
   simple,
   isDark,
 }) {
   const [intensity, setIntensity] = useState(0);
 
-  // Reset intensity when selected word changes
   useEffect(() => {
     setIntensity(0);
   }, [selectedWord]);
 
-  // When closed via cross (×) button or no word selected, completely vanish!
   if (!open || !selectedWord || !coreEmotion) return null;
 
   const emotion = getEmotion(selectedWord);
@@ -46,6 +48,11 @@ export default function DefinePanel({
   const whatNowPrompt =
     intensity > 0 && prompts ? prompts[intensity >= 4 ? 1 : 0] : null;
 
+  const relatedActions = getActionsForSelection(
+    coreEmotion.name,
+    branchSecondaryWord
+  );
+
   const activeEnglish = dispWord(selectedWord, simple);
   const activeBangla = dispBangla(selectedWord, simple);
   const altEnglish = simple
@@ -54,17 +61,12 @@ export default function DefinePanel({
   const altBangla = simple ? emotion?.bn || '' : emotion?.simple?.bn || '';
 
   const handleSpeak = () => {
-    if (!('speechSynthesis' in window)) return;
-    window.speechSynthesis.cancel();
     const text =
       activeEnglish +
       '. ' +
       meaningEn +
       (exampleEn ? ' For example: ' + exampleEn : '');
-    const u = new SpeechSynthesisUtterance(text);
-    u.rate = 0.9;
-    u.lang = 'en';
-    window.speechSynthesis.speak(u);
+    speakEnglishText(text, 0.9);
   };
 
   return (
@@ -106,7 +108,10 @@ export default function DefinePanel({
             <h3 className="m-0 text-[20px] font-bold text-[#000000] dark:text-[#ffffff] leading-snug">
               {activeEnglish}
               {activeBangla && (
-                <span className="block text-[17px] font-bold mt-[1px]" style={{ color: kc }}>
+                <span
+                  className="block text-[17px] font-bold mt-[1px]"
+                  style={{ color: kc }}
+                >
                   {activeBangla}
                 </span>
               )}
@@ -154,7 +159,9 @@ export default function DefinePanel({
           {emotion && (
             <span className="text-[11.5px] text-[#777] dark:text-[#aaa] bg-[#f7f7f7] dark:bg-[#2e2e2e] py-[2px] px-[8px] rounded-full">
               {simple ? 'Normal: ' : 'Simple: '}
-              <b className="font-semibold text-[#444] dark:text-[#ddd]">{altEnglish}</b>
+              <b className="font-semibold text-[#444] dark:text-[#ddd]">
+                {altEnglish}
+              </b>
               {altBangla ? ` (${altBangla})` : ''}
             </span>
           )}
@@ -225,6 +232,55 @@ export default function DefinePanel({
                 </p>
               </div>
             )}
+          </div>
+        )}
+
+        {/* Atlas of Emotions — Linked Behavioral Actions */}
+        {relatedActions.length > 0 && (
+          <div className="mt-[13px] pt-[11px] border-t border-[#eeeeee] dark:border-[#363636]">
+            <div className="flex items-center justify-between mb-[6px]">
+              <span className="text-[10.5px] font-bold uppercase tracking-[0.07em] text-[#888] dark:text-[#999]">
+                Actions &amp; Responses
+              </span>
+              {onOpenActions && (
+                <button
+                  type="button"
+                  onClick={() => onOpenActions(null)}
+                  className="text-[11.5px] font-bold bg-transparent border-none p-0 cursor-pointer hover:underline"
+                  style={{ color: kc }}
+                >
+                  Open Actions Map &#8594;
+                </button>
+              )}
+            </div>
+            <div className="flex flex-wrap gap-[5px]">
+              {relatedActions.map((act) => {
+                const isConstructive = act.impact === 'constructive';
+                const labelEn = simple ? act.simple.en : act.en;
+                const labelBn = simple ? act.simple.bn : act.bn;
+                return (
+                  <button
+                    key={act.id}
+                    type="button"
+                    onClick={() => onOpenActions && onOpenActions(act.id)}
+                    title="Click to explore this action"
+                    className={`text-[11.5px] py-[4px] px-[9px] rounded-full border cursor-pointer transition-colors text-left ${
+                      isConstructive
+                        ? 'bg-[#eefaf2] border-[#ccebd7] hover:bg-[#e1f6e8] dark:bg-[#193022] dark:border-[#295238]'
+                        : 'bg-[#fff5f5] border-[#f8d7d7] hover:bg-[#ffebeb] dark:bg-[#331e1e] dark:border-[#542c2c]'
+                    }`}
+                  >
+                    <span className="font-semibold text-[#000000] dark:text-[#ffffff]">
+                      {isConstructive ? '+ ' : '• '}
+                      {labelEn}
+                    </span>
+                    <span className="ml-[4px]" style={{ color: kc }}>
+                      ({labelBn})
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
           </div>
         )}
 

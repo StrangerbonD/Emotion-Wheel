@@ -48,6 +48,9 @@ body.dark {
   border: 0;
 }
 
+/* ==========================================================================
+   Emotion Wheel Styles
+   ========================================================================== */
 .wheel-wrapper {
   width: min(88vmin, 760px);
   height: min(88vmin, 760px);
@@ -122,6 +125,16 @@ body.dark {
   text-transform: uppercase;
 }
 
+/* Keyboard focus ring */
+.seg.kb-focus path {
+  stroke: #222222 !important;
+  stroke-width: 3.5 !important;
+  stroke-dasharray: 7 4;
+}
+
+/* ==========================================================================
+   Shared Control Pills & Buttons
+   ========================================================================== */
 .btn {
   border: 1px solid #e6e6e6;
   cursor: pointer;
@@ -171,67 +184,6 @@ body.dark {
   left: 18px;
 }
 
-/* Keyboard focus ring */
-.seg.kb-focus path {
-  stroke: #222222 !important;
-  stroke-width: 3.5 !important;
-  stroke-dasharray: 7 4;
-}
-
-/* Geneva spoke styling */
-.spoke-line {
-  stroke: #dddddd;
-  stroke-width: 1;
-  pointer-events: none;
-}
-
-.spoke-dot {
-  cursor: pointer;
-  pointer-events: all;
-  transition: transform 0.15s ease, opacity 0.15s;
-  transform-origin: center;
-  transform-box: fill-box;
-}
-
-.spoke-dot:hover {
-  animation: throb 0.6s ease-in-out infinite;
-}
-
-@keyframes throb {
-  0%,
-  100% {
-    transform: scale(1);
-  }
-  50% {
-    transform: scale(1.25);
-  }
-}
-
-.spoke-dot.dim {
-  opacity: 0.2;
-}
-
-.spoke-dot.selected {
-  stroke: #ffffff;
-  stroke-width: 2.5;
-}
-
-.axis-label {
-  font-size: 11px;
-  font-weight: 300;
-  fill: #aaaaaa;
-  pointer-events: none;
-  text-anchor: middle;
-}
-
-.dyad-label {
-  font-size: 8.5px;
-  font-weight: 400;
-  fill: #aaaaaa;
-  pointer-events: none;
-  user-select: none;
-}
-
 /* Dark mode overrides */
 body.dark .seg text {
   fill: #f0f0f0 !important;
@@ -264,16 +216,93 @@ body.dark .simplify-btn .sw {
 body.dark .simplify-btn.on .sw {
   background: #5aa55e;
 }
-body.dark .spoke-line {
-  stroke: #444444;
-}
-body.dark .axis-label {
-  fill: #777777;
-}
-body.dark .dyad-label {
-  fill: #888888;
+
+/* ==========================================================================
+   Atlas of Emotions — #actions/ View Styles (Stamen / Ekman UI Fidelity)
+   ========================================================================== */
+.atlas-font {
+  font-family: 'Raleway', 'Hind Siliguri', -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
+.atlas-bn {
+  font-family: 'Hind Siliguri', 'Lato', sans-serif;
+}
+
+.atlas-multiply {
+  mix-blend-mode: multiply;
+}
+
+body.dark .atlas-multiply {
+  mix-blend-mode: normal;
+}
+
+.atlas-state-area {
+  cursor: pointer;
+  transition: opacity 0.25s ease, filter 0.25s ease;
+}
+
+.atlas-action-ray {
+  cursor: pointer;
+  transform-origin: 0px 0px;
+  transition: transform 0.65s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.25s ease;
+}
+
+.atlas-action-label {
+  transition: left 0.65s cubic-bezier(0.4, 0, 0.2, 1),
+    top 0.65s cubic-bezier(0.4, 0, 0.2, 1),
+    opacity 0.25s ease,
+    border-color 0.25s ease,
+    background-color 0.25s ease;
+}
+
+@keyframes atlasSlideFromRight {
+  0% {
+    opacity: 0;
+    transform: translateX(64px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes atlasSlideFromLeft {
+  0% {
+    opacity: 0;
+    transform: translateX(-64px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.atlas-pan-right {
+  animation: atlasSlideFromRight 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.atlas-pan-left {
+  animation: atlasSlideFromLeft 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes atlasPopupIn {
+  0% {
+    opacity: 0;
+    transform: translateY(6px) scale(0.98);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.atlas-popup-enter {
+  animation: atlasPopupIn 0.24s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* ==========================================================================
+   Responsive, Reduced Motion & Print Styles
+   ========================================================================== */
 @media (max-width: 760px) {
   .wheel-wrapper {
     width: 172vw;
@@ -284,16 +313,20 @@ body.dark .dyad-label {
 
 @media (prefers-reduced-motion: reduce) {
   .seg,
-  .seg path {
+  .seg path,
+  .atlas-state-area,
+  .atlas-action-ray,
+  .atlas-action-label {
     transition: none !important;
   }
-  .define-card {
+  .define-card,
+  .atlas-pan-right,
+  .atlas-pan-left,
+  .atlas-popup-enter {
     animation: none !important;
   }
   .simplify-btn .sw,
-  .simplify-btn .sw::after {
-    transition: none !important;
-  }
+  .simplify-btn .sw::after,
   .btn {
     transition: none !important;
   }
@@ -305,6 +338,7 @@ body.dark .dyad-label {
     background: #ffffff;
   }
   .topright,
+  .topleft,
   .simplify-btn,
   .hint,
   .define-btn,
@@ -317,9 +351,6 @@ body.dark .dyad-label {
   .wheel-wrapper {
     width: 100vmin;
     height: 100vmin;
-  }
-  .stage {
-    height: auto;
   }
   .define-wrap {
     position: static;

@@ -14,7 +14,25 @@ export default {
         'accent-dark': '#b0a4ff',
       },
       fontFamily: {
-        sans: ['Lato', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'Helvetica', 'Arial', 'sans-serif'],
+        sans: [
+          'Lato',
+          'Hind Siliguri',
+          '-apple-system',
+          'BlinkMacSystemFont',
+          'Segoe UI',
+          'Roboto',
+          'Helvetica',
+          'Arial',
+          'sans-serif',
+        ],
+        atlas: [
+          'Raleway',
+          'Hind Siliguri',
+          '-apple-system',
+          'BlinkMacSystemFont',
+          'sans-serif',
+        ],
+        bangla: ['Hind Siliguri', 'Lato', 'sans-serif'],
       },
       keyframes: {
         pop: {

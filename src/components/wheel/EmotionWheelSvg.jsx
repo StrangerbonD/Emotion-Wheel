@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState, useCallback } from 'react';
-import { dispWord, keyColor } from '../utils/emotionHelpers';
+import { dispWord, keyColor } from '../../utils/emotionHelpers.js';
 import {
   CX,
   CY,
@@ -7,7 +7,7 @@ import {
   RMID,
   buildRingSegments,
   computeLabelTransform,
-} from '../utils/wheelGeometry';
+} from '../../utils/wheelGeometry.js';
 
 const MIN_SCALE = 0.6;
 const MAX_SCALE = 3.5;
@@ -29,7 +29,6 @@ export default function EmotionWheelSvg({
   const rotorRef = useRef(null);
   const hubRef = useRef(null);
 
-  // Store mutable transform state for 60fps direct SVG manipulation
   const transformState = useRef({
     curRot: 0,
     curScale: 1,
@@ -42,7 +41,7 @@ export default function EmotionWheelSvg({
 
   const dragState = useRef({
     on: false,
-    mode: 'spin', // 'spin' | 'pan'
+    mode: 'spin',
     startX: 0,
     startY: 0,
     startPanX: 0,
@@ -62,13 +61,11 @@ export default function EmotionWheelSvg({
 
   const [kbFocusedId, setKbFocusedId] = useState(null);
 
-  // Build segments for Junto-style model
   const wheelGeometry = useMemo(
     () => buildRingSegments('default', simple, isDark),
     [simple, isDark]
   );
 
-  // Apply selection & breadcrumb highlight metadata and z-order sorting
   const { orderedSegs, hasSelection } = useMemo(() => {
     const active = sel.ci !== null;
     const regular = [];
@@ -128,7 +125,6 @@ export default function EmotionWheelSvg({
     };
   }, [wheelGeometry, sel, isDark]);
 
-  // Direct DOM update for pan position, rotation, scale, and label orientation
   const applyView = useCallback(() => {
     const { curRot, curScale, focalR, panX, panY } = transformState.current;
     if (wrapperRef.current) {
@@ -220,7 +216,6 @@ export default function EmotionWheelSvg({
     [applyView]
   );
 
-  // Expose imperative animation & zoom helpers to parent App
   useEffect(() => {
     if (animTargetRef) {
       animTargetRef.current = {
@@ -271,12 +266,10 @@ export default function EmotionWheelSvg({
     }
   }, [animTargetRef, animateTo, wheelGeometry]);
 
-  // Re-apply view whenever segments re-render
   useEffect(() => {
     applyView();
   }, [orderedSegs, applyView]);
 
-  // Pointer drag to spin + two-finger pinch to zoom
   useEffect(() => {
     const svg = svgRef.current;
     if (!svg) return;
@@ -446,7 +439,6 @@ export default function EmotionWheelSvg({
     };
   }, [applyView]);
 
-  // Mouse wheel / trackpad scroll to ZOOM in and out
   useEffect(() => {
     const wrapper = wrapperRef.current;
     if (!wrapper) return;
@@ -480,7 +472,6 @@ export default function EmotionWheelSvg({
     return () => wrapper.removeEventListener('wheel', onWheel);
   }, [applyView]);
 
-  // Keyboard navigation
   useEffect(() => {
     function kbSegsAtLevel() {
       if (sel.ci === null) return wheelGeometry.segs.filter((g) => g.info.level === 0);
@@ -602,7 +593,6 @@ export default function EmotionWheelSvg({
               id="rotor"
               className={`rotor ${hasSelection ? 'has-selection' : ''}`}
             >
-              {/* All Wheel Segments */}
               {orderedSegs.map((seg) => {
                 const isKbFocus = kbFocusedId === seg.id;
                 const segClasses = [

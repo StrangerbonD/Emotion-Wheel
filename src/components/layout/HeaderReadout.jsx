@@ -1,5 +1,5 @@
 import React from 'react';
-import { dispWord, dispBangla } from '../utils/emotionHelpers';
+import { dispWord, dispBangla } from '../../utils/emotionHelpers.js';
 
 export default function HeaderReadout({ sel, liveData, simple }) {
   const coreObj = sel.ci !== null ? liveData[sel.ci] : null;
